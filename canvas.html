@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .boardBox{
+    margin: 100px auto 20px;
+    width:200px;
+    height: 400px;
+    background: #eee;
+    }
+   canvas{
+        border: 1px solid #298cff;
+    }
+</style>
+<body>
+    <div class="boardBox">
+        <canvas class="canvas"></canvas>
+    </div>
+
+
+    <script>
+        let ctx = null;
+        let point = {
+            x: 0,
+            y: 0
+        };
+        let moving = false;
+        let can = document.querySelector('.canvas');
+        let box = document.querySelector('.boardBox');
+        can.width = box.offsetWidth;
+        can.height = box.offsetHeight;
+        ctx = can.getContext('2d');
+        ctx.strokeStyle = "#19181c";
+        ctx.lineWidth = 2;
+
+        can.onmousedown = pcStart;
+        can.onmousemove = pcMove;
+        can.onmouseup = pcEnd;
+        // 鼠标按下(开始)
+        function pcStart (e) {
+            let x = e.offsetX, y = e.offsetY;   // 获取鼠标在画板（canvas）的坐标
+            point.x = x;
+            point.y = y;
+            ctx.beginPath();
+            moving = true;
+        };
+        // 鼠标移动（移动中...）
+        function pcMove (e) {
+            if(moving) {
+                let x = e.offsetX, y = e.offsetY;   // 获取鼠标在画板（canvas）的坐标
+                ctx.moveTo(point.x,point.y);    // 把路径移动到画布中的指定点，不创建线条(起始点)
+                ctx.lineTo(x, y);  // 添加一个新点，然后创建从该点到画布中最后指定点的线条，不创建线条
+                ctx.stroke();  // 绘制
+                point.x = x, point.y = y;   // 重置点坐标为上一个坐标
+            }
+        };
+        // 鼠标松开（结束）
+        function pcEnd () {
+            if(moving) {
+                ctx.closePath();   // 停止绘制
+                moving = false;    // 关闭绘制开关
+            }
+        };
+    </script>
+</body>
+</html>
